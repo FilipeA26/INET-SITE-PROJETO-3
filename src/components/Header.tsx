@@ -1,58 +1,88 @@
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { ArrowUpRight, Menu, X } from "lucide-react";
 import { waLink } from "../lib";
 
 const links = [
   ["Planos", "#planos"],
-  ["Como chega", "#jornada"],
-  ["Vantagens", "#vantagens"],
+  ["Serviços", "#servicos"],
+  ["Velocidade", "#velocidade"],
   ["Cobertura", "#cobertura"],
 ];
 
+/** Relógio ao vivo no horário de Brasília (ref. vividmotion). */
+function useClock() {
+  const fmt = () =>
+    new Intl.DateTimeFormat("pt-BR", { hour: "2-digit", minute: "2-digit", timeZone: "America/Sao_Paulo" }).format(new Date());
+  const [time, setTime] = useState(fmt);
+  useEffect(() => {
+    const id = setInterval(() => setTime(fmt()), 10_000);
+    return () => clearInterval(id);
+  }, []);
+  return time;
+}
+
+/**
+ * No hero: logo + relógio à esquerda e menu vertical à direita (ref. Fiber Optic Eye).
+ * Depois do hero: barra compacta horizontal com fundo, para ler sobre as seções coloridas.
+ */
 export default function Header() {
-  const [scrolled, setScrolled] = useState(false);
+  const time = useClock();
+  const [compact, setCompact] = useState(false);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const on = () => setScrolled(window.scrollY > 24);
+    // o hero é longo (animação presa na tela), então só compacta quando ele termina
+    const on = () => {
+      const hero = document.getElementById("inicio");
+      const end = hero ? hero.offsetHeight - window.innerHeight : window.innerHeight;
+      setCompact(window.scrollY > end);
+    };
     on();
     window.addEventListener("scroll", on, { passive: true });
     return () => window.removeEventListener("scroll", on);
   }, []);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3">
-      <div
-        className={`container-x flex h-16 items-center justify-between rounded-full transition-all duration-300 ${
-          scrolled || open ? "bg-navy/90 shadow-lg shadow-black/20 backdrop-blur-xl" : ""
-        }`}
-      >
-        <a href="#inicio" aria-label="INET – início">
-          <img src="/inet-logo-branca.png" alt="INET Internet Fibra Óptica" className="h-9 w-auto" />
-        </a>
-        <nav className="hidden items-center gap-8 lg:flex">
+    <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${compact || open ? "bg-navy-ink/80 backdrop-blur-xl" : ""}`}>
+      <div className={`container-x flex justify-between transition-all duration-500 ${compact ? "items-center py-3" : "items-start py-5"}`}>
+        <div className="flex items-center gap-5">
+          <a href="#inicio" aria-label="INET – início">
+            <img src="/inet-logo-branca.png" alt="INET Internet Fibra Óptica" className={`w-auto transition-all ${compact ? "h-7" : "h-9"}`} />
+          </a>
+          {compact && <span className="meta hidden text-white/45 sm:inline">[ MG · {time} BRT ]</span>}
+        </div>
+        {!compact && <p className="meta absolute left-5 top-[4.1rem] text-white/45 sm:left-8 lg:left-12">[ MG · {time} BRT ]</p>}
+
+        <nav className={`hidden text-right md:flex ${compact ? "flex-row items-center gap-7" : "flex-col items-end gap-1"}`}>
           {links.map(([label, href]) => (
-            <a key={href} href={href} className="text-sm font-medium text-white/80 transition hover:text-lime">
+            <a key={href} href={href} className="meta group inline-flex items-center gap-1 text-white/75 transition hover:text-lime">
               {label}
+              <ArrowUpRight size={12} className="transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </a>
           ))}
+          <a
+            href={waLink()}
+            target="_blank"
+            rel="noreferrer"
+            className={compact ? "pill-outline border-lime py-2 text-lime" : "meta mt-1 inline-flex items-center gap-1 text-lime"}
+          >
+            Fale conosco <ArrowUpRight size={12} />
+          </a>
         </nav>
-        <a href={waLink("Olá! Quero assinar a internet fibra da INET.")} target="_blank" rel="noreferrer" className="btn-lime hidden py-2.5 text-sm lg:inline-flex">
-          Assine já
-        </a>
-        <button className="lg:hidden" onClick={() => setOpen(!open)} aria-label="Abrir menu">
+
+        <button className="md:hidden" onClick={() => setOpen(!open)} aria-label="Abrir menu">
           {open ? <X /> : <Menu />}
         </button>
       </div>
       {open && (
-        <nav className="container-x mt-2 flex flex-col gap-1 rounded-3xl bg-navy p-4 lg:hidden">
+        <nav className="container-x flex flex-col gap-3 pb-6 pt-4 md:hidden">
           {links.map(([label, href]) => (
-            <a key={href} href={href} onClick={() => setOpen(false)} className="rounded-xl px-3 py-3 hover:bg-white/10">
+            <a key={href} href={href} onClick={() => setOpen(false)} className="display text-3xl">
               {label}
             </a>
           ))}
-          <a href={waLink()} target="_blank" rel="noreferrer" className="btn-lime mt-2">
-            Assine já
+          <a href={waLink()} target="_blank" rel="noreferrer" className="pill-outline mt-2 w-fit">
+            Fale conosco <ArrowUpRight size={14} />
           </a>
         </nav>
       )}

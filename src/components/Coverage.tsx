@@ -1,9 +1,9 @@
 import { useState, type FormEvent } from "react";
-import { MapPin, ArrowRight } from "lucide-react";
-import Reveal from "./Reveal";
-import Orbit from "./Orbit";
+import { ArrowUpRight, MapPin } from "lucide-react";
+import HangingFibers from "./HangingFibers";
 import { waLink } from "../lib";
 
+/** Consulta de cobertura sobre a cortina de fibras penduradas. */
 export default function Coverage() {
   const [query, setQuery] = useState("");
 
@@ -14,29 +14,37 @@ export default function Coverage() {
   };
 
   return (
-    <section id="cobertura" className="relative overflow-hidden bg-lime py-28 text-navy">
-      <Orbit className="pointer-events-none absolute -right-32 -top-10 w-[720px] opacity-50 mix-blend-multiply" />
-      <div className="container-x relative">
-        <Reveal className="max-w-3xl">
-          <p className="tag text-forest">Cobertura</p>
-          <h2 className="title mt-4">A fibra da INET chega na sua rua?</h2>
-          <p className="mt-5 max-w-lg text-lg text-navy/75">Digite seu CEP ou bairro e fale direto com a nossa equipe para confirmar.</p>
-          <form onSubmit={submit} className="mt-10 flex max-w-xl flex-col gap-3 sm:flex-row">
-            <label className="flex flex-1 items-center gap-3 rounded-full bg-navy px-6 py-4 text-white">
+    <section id="cobertura" className="relative min-h-[100svh] overflow-hidden bg-[linear-gradient(180deg,#0062EC_0%,#003F99_55%,#03256C_100%)]">
+      <HangingFibers className="absolute inset-0 h-full w-full" />
+      <div className="container-x relative flex min-h-[100svh] flex-col justify-end pb-20 pt-40">
+        <div className="grid items-end gap-10 lg:grid-cols-2">
+          <div>
+            <p className="meta text-lime">( F ) Cobertura</p>
+            <h2 className="display mt-5 text-5xl sm:text-7xl">
+              <span className="block">A luz</span>
+              <span className="block pl-[0.8em]">
+                <em>já chega</em>
+              </span>
+              <span className="block">// na sua rua?</span>
+            </h2>
+          </div>
+          <form onSubmit={submit} className="rounded-[2rem] border border-white/20 bg-navy-ink/50 p-6 backdrop-blur-xl sm:p-8">
+            <p className="meta text-white/60">Consulte a disponibilidade</p>
+            <label className="mt-5 flex items-center gap-3 border-b border-white/30 pb-3">
               <MapPin size={20} className="text-lime" />
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="CEP, bairro ou cidade"
                 aria-label="CEP, bairro ou cidade"
-                className="min-w-0 flex-1 bg-transparent placeholder:text-white/50 focus:outline-none"
+                className="min-w-0 flex-1 bg-transparent font-display text-2xl placeholder:text-white/40 focus:outline-none"
               />
             </label>
-            <button type="submit" className="btn-navy border-2 border-navy bg-transparent text-navy hover:bg-navy hover:text-white">
-              Consultar <ArrowRight size={18} />
+            <button type="submit" className="pill-grad mt-6 w-full">
+              Consultar no WhatsApp <ArrowUpRight size={16} />
             </button>
           </form>
-        </Reveal>
+        </div>
       </div>
     </section>
   );

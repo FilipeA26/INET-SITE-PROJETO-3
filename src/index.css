@@ -5,25 +5,28 @@
 @layer base {
   html { scroll-behavior: smooth; }
   body { @apply bg-navy-ink font-sans text-white antialiased; }
-  h1, h2, h3 { @apply font-display; }
+  ::selection { @apply bg-lime text-navy; }
 }
 
 @layer components {
-  .container-x { @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8; }
-  .btn-lime {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-lime px-7 py-3.5 font-semibold text-navy
-      transition hover:-translate-y-0.5 hover:shadow-[0_10px_30px_-8px_rgba(112,224,0,0.8)];
+  .container-x { @apply mx-auto w-full max-w-[1400px] px-5 sm:px-8 lg:px-12; }
+  /* tipografia editorial: maiúsculas + palavras em itálico minúsculo (ref. Fiber Optic Eye) */
+  .display { @apply font-display font-normal uppercase leading-[0.95] tracking-[-0.01em]; }
+  .display em { @apply font-light normal-case italic; }
+  .meta { @apply font-display text-[11px] font-medium uppercase tracking-[0.22em]; }
+  .pill-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/50 px-6 py-2.5 font-display text-[11px]
+      font-semibold uppercase tracking-[0.22em] transition hover:border-lime hover:bg-lime hover:text-navy;
   }
-  .btn-navy {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-navy px-7 py-3.5 font-semibold text-white
-      transition hover:-translate-y-0.5 hover:bg-navy-deep;
+  .pill-grad {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-electric to-lime px-7 py-3.5 font-semibold
+      text-navy-ink transition hover:-translate-y-0.5 hover:shadow-[0_12px_40px_-10px_rgba(112,224,0,0.8)];
   }
-  .btn-line {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/40 px-7 py-3.5 font-semibold
-      text-white transition hover:border-lime hover:text-lime;
+  .pill-glass {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/30 bg-white/10 px-7 py-3.5 font-semibold
+      text-white backdrop-blur-md transition hover:bg-white/20;
   }
-  .tag { @apply text-xs font-semibold uppercase tracking-[0.25em]; }
-  .title { @apply font-display text-4xl font-extrabold italic leading-[1.02] sm:text-6xl; }
+  .grad-text { @apply bg-gradient-to-r from-[#5CC8FF] via-white to-lime bg-clip-text text-transparent; }
 }
 
 @keyframes marquee {

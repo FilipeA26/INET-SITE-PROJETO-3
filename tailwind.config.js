@@ -12,7 +12,7 @@ export default {
         lime: "#70E000",
       },
       fontFamily: {
-        display: ['"Baloo Thambi 2"', "system-ui", "sans-serif"],
+        display: ['"Exo 2"', "system-ui", "sans-serif"],
         sans: ["Poppins", "system-ui", "sans-serif"],
       },
     },
